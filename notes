@@ -1,0 +1,9 @@
+=== repl playground ===
+
+A node:repl enviroment meant to be extended with custom commands.
+
+---command line utilities---
+node - v18
+npm & npx 
+nvm
+tsc (via npx)
