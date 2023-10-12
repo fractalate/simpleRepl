@@ -1,9 +1,20 @@
 === repl playground ===
 
-A node:repl enviroment meant to be extended with custom commands.
+A repl module meant to be extended with custom commands.
+REPLserver.eval is read only now, so this doesn't work anymore. It's also really difficult to access the defaultEval function used for instaniation. This is part of the reason we are doing this.
+https://github.com/nodejs/node/issues/29719
 
 ---command line utilities---
 node - v18
 npm & npx 
 nvm
 tsc (via npx)
+
+---enviroment setup---
+1. install fedora
+2. install vscode
+3. install nvm `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash`
+4. install node lts `nvm install --lts`
+4. install typescript `npm install typescript --save-dev`
+5. initialize typescript project `npx tsc init`
+6. update outDir in tsconfig.json to './bin'
