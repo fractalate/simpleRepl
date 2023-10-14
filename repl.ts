@@ -32,10 +32,27 @@ let commands: any = {
       split.splice(0,1);
       console.log(split.join(' '));
     }
+  },
+  login: {
+    help: 'collect "login" credentials',
+    action: (username:string) => {
+      console.log(username[1]);
+      r.setPrompt('password: ');
+      updateEval((password:string) => {
+        console.log('password = '+password)
+        r.setPrompt(promptString);
+        updateEval(defaultEvaluate);
+      });
+      r.prompt();
+    }
   }
 }
 
-function evaluate (command:string) {
+function updateEval(newEval:any) {
+  evaluate = newEval;
+}
+
+const defaultEvaluate = (command:string) => {
   const split = command.split(' ');
 
   if(commands[split[0]]) {
@@ -47,6 +64,8 @@ function evaluate (command:string) {
   }
 }
 
+let evaluate = defaultEvaluate;
+
 const r = readline.createInterface(options);
 r.prompt();
 r.on('line',(line)=>{
@@ -57,6 +76,11 @@ r.on('line',(line)=>{
   }
 
   r.prompt();
-}).on('close',()=>{
+});
+r.on('close',()=>{
+  process.exit();
+});
+r.on('SIGINT',()=>{
+  console.log('');
   process.exit();
 });
