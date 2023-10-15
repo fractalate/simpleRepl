@@ -1,8 +1,17 @@
-=== repl playground ===
+=== simpleRepl ===
+====== A repl module meant to be extended with custom commands. ======
 
-A repl module meant to be extended with custom commands.
-REPLserver.eval is read only now, so this doesn't work anymore. It's also really difficult to access the defaultEval function used for instaniation. This is part of the reason we are doing this.
-https://github.com/nodejs/node/issues/29719
+REPLserver.eval is read only now, so the solution in this issue doesn't work anymore. https://github.com/nodejs/node/issues/29719
+It's also really difficult to access the defaultEval function used for instaniation. This is part of the reason we are doing this.
+
+--- use ---
+Check out example.ts for an example, or set up a very basic instance of like:
+```
+import {simpleRepl} from './repl';
+const repl = simpleRepl();
+``` 
+
+once you are in the repl environment try running `help`.
 
 ---command line utilities---
 node - v18
@@ -18,3 +27,6 @@ tsc (via npx)
 4. install typescript `npm install typescript --save-dev`
 5. initialize typescript project `npx tsc init`
 6. update outDir in tsconfig.json to './bin'
+
+---build---
+1. `npx tsc`
