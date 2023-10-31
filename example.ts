@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { simpleRepl } from './simpleRepl';
-import { request } from  'http';
+import { ClientRequest, request } from  'http';
 
 const commands: any = {
   exit: { 
@@ -30,9 +30,9 @@ const commands: any = {
       repl.interface.prompt();
     }
   },
-  request: { //this is "broken". simpleRepl does not wait till the action finishes before reprompting
+  request: {
     help: 'make an http request `request <METHOD> <HOSTNAME> </PATH>`',
-    action: (args:Array<any>) => {
+    action: async (args:Array<any>) => {
       const options = {
         hostname: args[2],
         port: 80,
@@ -43,22 +43,23 @@ const commands: any = {
         }
       };
       
-      const req = request(options, (res) => {
-        console.log();
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          console.log(`BODY: ${chunk}`);
+      return new Promise<ClientRequest> ((resolve,reject) => {
+      const req =  request(options, (res) => {
+          console.log();
+          res.setEncoding('utf8');
+          res.on('data', (chunk) => {
+            resolve(chunk);
+          });
+          res.on('end', () => {
+          });
         });
-        res.on('end', () => {
-        });
-      });
+        
 
-      req.on('error', (e) => {
-        console.error(`problem with request: ${e.message}`);
-      });
-      req.end();
+        req.on('error', (e) => {
+          reject(e);
+        });
+        req.end();
+      })
     }
   }
 }
