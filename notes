@@ -1,11 +1,12 @@
 === simpleRepl ===
 ====== A repl module meant to be extended with custom commands. ======
+The node builtin REPLserver.eval is read only now, 
+so the solution in this issue doesn't work anymore. https://github.com/nodejs/node/issues/29719
 
-REPLserver.eval is read only now, so the solution in this issue doesn't work anymore. https://github.com/nodejs/node/issues/29719
-It's also really difficult to access the defaultEval function used for instaniation. This is part of the reason we are doing this.
+It's also really difficult to access the defaultEval function used for instaniation. This is the major reason I started this project.
 
 --- use ---
-Check out example.ts for an example, or set up a very basic instance of like:
+Check out example.ts for an example, or set up a very basic instance like:
 ```
 import {simpleRepl} from './repl';
 const repl = simpleRepl();
@@ -14,13 +15,13 @@ const repl = simpleRepl();
 once you are in the repl environment try running `help`.
 
 ---command line utilities---
-node - v18
+node - v20
 npm & npx 
 nvm
 tsc (via npx)
 
----enviroment setup---
-1. install fedora
+---my dev enviroment setup---
+1. install fedora 38
 2. install vscode
 3. install nvm `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash`
 4. install node lts `nvm install --lts`
@@ -28,5 +29,5 @@ tsc (via npx)
 5. initialize typescript project `npx tsc init`
 6. update outDir in tsconfig.json to './bin'
 
----build---
+---build process---
 1. `npx tsc`
