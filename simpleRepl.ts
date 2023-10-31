@@ -19,14 +19,14 @@ export class simpleRepl {
 
   constructor(options?: replOptions){ //TODO: figure out issues with input type
 
-    this.defaultEvaluate = (command:string) => {
+    this.defaultEvaluate = async (command:string) => {
       const split = command.split(' ');
 
       if(this.commands[split[0]]) {
         if(split.length > 0){
-          this.commands[split[0]].action(split);
+          return await this.commands[split[0]].action(split);
         } else {
-          this.commands[split[0]].action();
+          return await this.commands[split[0]].action();
         }
       } else {
         console.log('Unrecognized command: '+split[0]);
@@ -71,11 +71,15 @@ export class simpleRepl {
     this.interface.setPrompt(this.prompt);
     
     this.interface.prompt();
-    this.interface.on('line',(line)=>{
+    this.interface.on('line',async (line)=>{
       let trimmedCommand = line.trim();
       
       if(trimmedCommand) {
-        this.evaluate(trimmedCommand); //TODO: should I really trim the command here, maybe this should be under evaluate()'s purveiw?
+        const response = this.evaluate(trimmedCommand)  //TODO: should I really trim the command here, maybe this should be under evaluate()'s purveiw?
+        if(typeof await response !== 'undefined') {
+          console.log(await response);
+        }
+         
       }
 
       this.interface.prompt();

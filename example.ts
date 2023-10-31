@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { simpleRepl } from './repl';
+import { simpleRepl } from './simpleRepl';
 import { request } from  'http';
 
 const commands: any = {
@@ -63,7 +63,7 @@ const commands: any = {
   }
 }
 
-const repl = new simpleRepl({prompt:'> ', commands: commands});
+const repl = new simpleRepl({prompt: '> ', commands: commands});
 /*
 interface replOptions {
   prompt?: string;
