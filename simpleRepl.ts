@@ -20,16 +20,19 @@ export class simpleRepl {
   constructor(options?: replOptions){ //TODO: figure out issues with input type
 
     this.defaultEvaluate = async (command:string) => {
-      const split = command.split(' ');
+      const args = command.split(' ');
 
-      if(this.commands[split[0]]) {
-        if(split.length > 0){
-          return await this.commands[split[0]].action(split);
+      if(this.commands[args[0]]) {
+        if(args.length > 0){
+          // check for sub commands
+          this.checkSubcommands(args,this.commands[args[0]],0);
+          //return await this.commands[split[0]].action(split);
+
         } else {
-          return await this.commands[split[0]].action();
+          return await this.commands[args[0]].action();
         }
       } else {
-        console.log('Unrecognized command: '+split[0]);
+        console.log('Unrecognized command: '+args[0]);
       }
     }
 
@@ -91,6 +94,19 @@ export class simpleRepl {
       console.log('');
       process.exit(0);
     });
+  }
+
+  private checkSubcommands(args: Array<string>, command: any, i: number){
+    if('subcommands' in command){
+      if(command.subcommands[args[i+1]] && i < args.length){
+        this.checkSubcommands(args, command.subcommands[args[i+1]], i++);
+      } else {
+        command.action(args);
+      }
+    } else {
+      command.action(args);
+    }
+
   }
 
   updateEval(newEval:any) { //TODO: fix newEval type? should be 'Function'?

@@ -1,8 +1,26 @@
 {
-  "version": "0.1.0",
+  "name": "simplerepl",
+  "description": "A simple REPL module which is extensible with custom commands and eval functions.",
+  "version": "0.2.0",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.8.3",
     "typescript": "^5.2.2"
-  }
+  },
+  "main": "bin/simpleRepl.js",
+  "bin": {
+    "simplerepl": "bin/exampleRepl.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lledargo/simpleRepl.git"
+  },
+  "author": "Matthew French",
+  "bugs": {
+    "url": "https://github.com/lledargo/simpleRepl/issues"
+  },
+  "homepage": "https://github.com/lledargo/simpleRepl#readme"
 }

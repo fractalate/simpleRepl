@@ -15,7 +15,15 @@ const commands: any = {
     action: (args:Array<String>) => {
       args.splice(0,1);
       console.log(args.join(' '));
-    }
+    },
+    subcommands: {
+      backward: {
+        action: (args: Array<String>) => {
+          args.splice(0,2);
+          console.log(args.join(' ').split('').reverse().join(''));
+        }
+      }
+    } 
   },
   login: {
     help: 'collect "login" credentials',
