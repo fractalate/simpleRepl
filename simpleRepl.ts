@@ -25,8 +25,7 @@ export class simpleRepl {
       if(this.commands[args[0]]) {
         if(args.length > 0){
           // check for sub commands
-          this.checkSubcommands(args,this.commands[args[0]],0);
-          //return await this.commands[split[0]].action(split);
+          return await this.checkSubcommands(args,this.commands[args[0]],0);
 
         } else {
           return await this.commands[args[0]].action();
@@ -41,6 +40,7 @@ export class simpleRepl {
       action: () => {
         for (const command in this.commands) {
           console.log(command + '\t\t' + this.commands[command].help);
+          this.helpSubcommands(this.commands[command]);
         }
       }
     }
@@ -96,15 +96,24 @@ export class simpleRepl {
     });
   }
 
-  private checkSubcommands(args: Array<string>, command: any, i: number){
+  private helpSubcommands(command: any) {
+    if('subcommands' in command){
+      for (const c in command.subcommands) {
+        console.log('\t' + c + '\t\t' + command.subcommands[c].help);
+        this.helpSubcommands(command.subcommands[c]);
+      }
+    }
+  }
+
+  private async checkSubcommands(args: Array<string>, command: any, i: number): Promise<any>{
     if('subcommands' in command){
       if(command.subcommands[args[i+1]] && i < args.length){
-        this.checkSubcommands(args, command.subcommands[args[i+1]], i++);
+        return await this.checkSubcommands(args, command.subcommands[args[i+1]], i++);
       } else {
-        command.action(args);
+        return await command.action(args);
       }
     } else {
-      command.action(args);
+      return await command.action(args);
     }
 
   }

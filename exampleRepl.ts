@@ -18,6 +18,7 @@ const commands: any = {
     },
     subcommands: {
       backward: {
+        help: 'say the arguments in reverse at the letter level',
         action: (args: Array<String>) => {
           args.splice(0,2);
           console.log(args.join(' ').split('').reverse().join(''));
