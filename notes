@@ -3,7 +3,9 @@
 The node builtin REPLserver.eval is read only now, 
 so the solution in this issue doesn't work anymore. https://github.com/nodejs/node/issues/29719
 
-It's also really difficult to access the defaultEval function used for instaniation. This is the major reason I started this project.
+It's also really difficult to access the defaultEval function used for instantiation. This is the major reason I started this project.
+
+Now on npm! `npm install simplerepl`
 
 --- use ---
 Check out example.ts for an example, or set up a very basic instance like:

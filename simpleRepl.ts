@@ -22,8 +22,8 @@ export class simpleRepl {
     this.defaultEvaluate = async (command:string) => {
       const args = command.split(' ');
 
-      if(this.commands[args[0]]) {
-        if(args.length > 0){
+      if (Boolean(this.commands[args[0]])) {
+        if (args.length > 0) {
           // check for sub commands
           return await this.checkSubcommands(args,this.commands[args[0]],0);
 
