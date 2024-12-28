@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import globals from 'globals'
 
 import path from 'path'
@@ -11,13 +12,16 @@ const __dirname = path.dirname(__filename)
 const compat = new FlatCompat({ baseDirectory: __dirname, recommendedConfig: pluginJs.configs.recommended })
 
 export default [
+  ...compat.extends('standard-with-typescript'),
   {
     files: ['**/*.ts'],
-    ignores: ['**/*.js', '**/*.mjs'],
     rules: {
       semi: 'error',
       'no-extra-boolean-cast': 'off'
     },
-    languageOptions: { globals: globals.browser } },
-  ...compat.extends('standard-with-typescript')
+    languageOptions: { globals: globals.browser }
+  },
+  {
+    ignores: ['**/*.js']
+  }
 ]
