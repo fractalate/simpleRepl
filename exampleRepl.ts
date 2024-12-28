@@ -1,47 +1,53 @@
 #!/usr/bin/env node
 
-import { simpleRepl } from './simpleRepl';
-import { ClientRequest, request } from  'http';
+import { simpleRepl } from './simpleRepl'
+import { type ClientRequest, request } from 'http'
 
-const commands: any = {
-  exit: { 
+const commands: any = [
+  {
+    commandWord: 'exit',
     help: 'close the repl environment',
     action: () => {
-      process.exit(0);
+      process.exit(0)
     }
   },
-  say: {
+  {
+    commandWord: 'say',
     help: 'console.log the arguments to this command',
-    action: (args:Array<String>) => {
-      args.splice(0,1);
-      console.log(args.join(' '));
+    action: (args: string[]) => {
+      args.splice(0, 1)
+      console.log(args.join(' '))
+      return ''
     },
-    subcommands: {
-      backward: {
+    subcommands: [
+      {
+        commandWord: 'backward',
         help: 'say the arguments in reverse at the letter level',
-        action: (args: Array<String>) => {
-          args.splice(0,2);
-          console.log(args.join(' ').split('').reverse().join(''));
+        action: (args: string[]) => {
+          args.splice(0, 2)
+          console.log(args.join(' ').split('').reverse().join(''))
         }
       }
-    } 
+    ]
   },
-  login: {
+  {
+    commandWord: 'login',
     help: 'collect "login" credentials',
-    action: (args:Array<String>) => {
-      console.log(args[1]);
-      repl.interface.setPrompt('password: ');
-      repl.updateEval((password:string) => {
-        console.log('password = '+password)
-        repl.interface.setPrompt(repl.prompt);
-        repl.updateEval(repl.defaultEvaluate);
-      });
-      repl.interface.prompt();
+    action: (args: string[]) => {
+      console.log(args[1])
+      repl.interface.setPrompt('password: ')
+      repl.updateEval((password: string) => {
+        console.log('password = ' + password)
+        repl.interface.setPrompt(repl.prompt)
+        repl.updateEval(repl.defaultEvaluate)
+      })
+      repl.interface.prompt()
     }
   },
-  request: {
+  {
+    commandWord: 'request',
     help: 'make an http request `request <METHOD> <HOSTNAME> </PATH>`',
-    action: async (args:Array<any>) => {
+    action: async (args: any[]) => {
       const options = {
         hostname: args[2],
         port: 80,
@@ -50,36 +56,36 @@ const commands: any = {
         headers: {
           accept: 'application/json'
         }
-      };
-      
-      return new Promise<ClientRequest> ((resolve,reject) => {
-      const req =  request(options, (res) => {
-          console.log();
-          res.setEncoding('utf8');
-          res.on('data', (chunk) => {
-            resolve(chunk);
-          });
+      }
+
+      return await new Promise<ClientRequest>((resolve, reject) => {
+        const req = request(options, (res) => {
+          console.log()
+          res.setEncoding('utf8')
+          res.on('data', (chunk: ClientRequest) => {
+            resolve(chunk)
+          })
           res.on('end', () => {
-          });
-        });
-        
+          })
+        })
 
         req.on('error', (e) => {
-          reject(e);
-        });
-        req.end();
+          reject(e)
+        })
+        req.end()
       })
     }
   }
-}
+]
 
-const repl = new simpleRepl({prompt: '> ', commands: commands});
+// eslint-disable-next-line new-cap
+const repl = new simpleRepl({ prompt: '> ', commands })
 /*
 interface replOptions {
   prompt?: string;
   input?: any;
   output?: any;
   evaluate?: Function;
-  commands?: any;        
+  commands?: any;
 }
 */
