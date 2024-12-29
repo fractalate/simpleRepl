@@ -1,7 +1,7 @@
 {
   "name": "simplerepl",
   "description": "A simple REPL module which is extensible with custom commands and eval functions.",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "license": "MIT",
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.2",
