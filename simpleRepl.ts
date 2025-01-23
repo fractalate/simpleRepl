@@ -1,5 +1,6 @@
 import * as readline from 'readline'
 
+// are your types so blessed that they deserve lowercase names?!?!? Nah! Use capital Command!
 export interface command {
   commandWord: string
   help: string
@@ -15,6 +16,27 @@ interface replOptions {
   commands?: command[]
 }
 
+const defaultCommands = (): command[] => {
+  return [
+    {
+      commandWord: 'exit',
+      help: 'close the repl environment',
+      action: () => {
+        process.exit(0)
+      }
+    },
+    {
+      commandWord: 'say',
+      help: 'console.log the arguments to this command',
+      action: (args: string[]) => {
+        args.splice(0, 1)
+        return args.join(' ')
+      }
+    }
+  ]
+}
+
+// Upper case!!!!!
 export class simpleRepl {
   prompt: string
   inputStream: NodeJS.ReadStream // todo: add funcntions to update input/ output streams
@@ -31,7 +53,9 @@ export class simpleRepl {
       const args: string[] = input.split(' ')
       const command = this.commands.find(element => element.commandWord === args[0])
 
-      if (typeof command !== 'undefined') {
+      /*
+      if (command != null) {
+      //if (typeof command !== 'undefined') {
         if (args.length > 0) {
           // check for sub commands
           return await this.checkSubcommands(args, command, 0)
@@ -40,6 +64,16 @@ export class simpleRepl {
         }
       } else {
         return 'Unrecognized command: ' + args[0]
+      }
+      */
+      // maybe?
+      if (command == null) {
+        return 'Unrecognized command: ' + args[0]
+      } else if (args.length > 0) {
+        // check for sub commands
+        return await this.checkSubcommands(args, command, 0)
+      } else {
+        return await command.action([])
       }
     }
 
@@ -55,24 +89,6 @@ export class simpleRepl {
       }
     }
 
-    const defaultCommands: command[] = [
-      {
-        commandWord: 'exit',
-        help: 'close the repl environment',
-        action: () => {
-          process.exit(0)
-        }
-      },
-      {
-        commandWord: 'say',
-        help: 'console.log the arguments to this command',
-        action: (args: string[]) => {
-          args.splice(0, 1)
-          return args.join(' ')
-        }
-      }
-    ]
-
     // if no options were passed to the constructor
     if (typeof options === 'undefined') {
       options = {}
@@ -83,9 +99,7 @@ export class simpleRepl {
     this.outputStream = typeof options.output !== 'undefined' ? options.output : process.stdout
     this.evaluate = typeof options.evaluate !== 'undefined' ? options.evaluate : this.defaultEvaluate
 
-    this.commands = []
-    const commandsArray: command[] = typeof options.commands !== 'undefined' ? options.commands : defaultCommands
-    commandsArray.forEach((element: command) => this.commands.push(element))
+    this.commands = options.commands == null ? [...defaultCommands()] : [...options.commands]
     this.commands.push(helpCommand)
 
     this.interface = readline.createInterface(this.inputStream, this.outputStream)
@@ -94,7 +108,6 @@ export class simpleRepl {
     this.interface.prompt()
     // the listener function is meant to return void, but because we call it
     //    async it actually returns Promise<void> and that makes eslint sad.
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.interface.on('line', async (line) => {
       const trimmedCommand = line.trim()
 
@@ -118,10 +131,10 @@ export class simpleRepl {
 
   private helpSubcommands (command: any): void {
     if (typeof command.subcommands !== 'undefined') {
-      command.subcommands.forEach((element: command) => {
+      for (const element of command.subcommands) {
         console.log('\u2B91\t' + element.commandWord + '\t\t' + element.help)
         this.helpSubcommands(element)
-      })
+      }
     }
   }
 
@@ -130,10 +143,10 @@ export class simpleRepl {
   private checkSubcommands (args: string[], command: command, i: number): string | Promise<string> {
     if (typeof command.subcommands !== 'undefined') {
       const subcommand = command.subcommands.find(element => element.commandWord === args[i + 1])
-      if ((typeof subcommand !== 'undefined') && (i < args.length)) {
-        return this.checkSubcommands(args, subcommand, i++)
+      if ((typeof subcommand !== 'undefined') && (i < args.length)) { // good lledargo, gotta know your boundaries
+        return this.checkSubcommands(args, subcommand, i)
       } else {
-        return command.action(args)
+        return command.action(args) // for nested stuff, is this right?!?!
       }
     } else {
       return command.action(args)

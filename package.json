@@ -18,7 +18,9 @@
   },
   "main": "bin/simpleRepl.js",
   "bin": {
-    "simplerepl": "bin/exampleRepl.js"
+    "simplerepl": "bin/exampleRepl.js",
+    "drawkcab yas drawkcab": "bin/drawkcab.js",
+    "good quality code inside": "bin/goodjob.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
